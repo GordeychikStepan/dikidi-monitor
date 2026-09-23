@@ -1,0 +1,44 @@
+name: DIKIDI monitor
+
+on:
+  schedule:
+    - cron: '2-59/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Действие'
+        required: true
+        default: check
+        type: choice
+        options:
+          - check
+          - telegram_test
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dikidi-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Get project
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run unit tests
+        run: npm test
+      - name: Check DIKIDI or Telegram
+        run: npm run check
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CHECK_MODE: ${{ inputs.mode || 'check' }}
