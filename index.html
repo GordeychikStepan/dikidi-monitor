@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2ee">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'self'; object-src 'none'">
+  <title>Мониторинг записи · DIKIDI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">↗</span><div><strong>На вождение</strong><small>Мониторинг DIKIDI</small></div></div>
+      <div class="top-actions"><button class="icon-button" id="themeToggle" type="button" aria-label="Переключить тему">◐</button><button class="icon-button" id="signOut" type="button" aria-label="Выйти" hidden>↪</button></div>
+    </header>
+
+    <main id="loginScreen" class="login-screen">
+      <section class="login-card">
+        <span class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</span>
+        <h1>Лови свободное<br><em>время первым.</em></h1>
+        <p>Расписание инструктора, история проверок и уведомления в одном месте.</p>
+        <form id="loginForm">
+          <label>Почта<input id="email" type="email" autocomplete="username" required placeholder="you@example.com"></label>
+          <label>Пароль<input id="password" type="password" autocomplete="current-password" required placeholder="Ваш пароль Supabase"></label>
+          <button class="button button-primary full" type="submit">Войти <span aria-hidden="true">↗</span></button>
+        </form>
+        <p id="loginError" class="error-message" role="alert" hidden></p>
+        <p class="fineprint">Доступ есть только у владельца, созданного в Supabase Auth.</p>
+      </section>
+    </main>
+
+    <div id="dashboard" hidden>
+      <div id="globalError" class="banner banner-error" role="alert" hidden></div>
+      <section id="overview" class="page is-active" aria-labelledby="overviewTitle">
+        <div class="page-head"><div><span class="eyebrow">ЛИЧНАЯ ПАНЕЛЬ / DIKIDI</span><h1 id="overviewTitle">Запись к инструктору<span class="headline-dot">.</span></h1><p class="muted" id="targetName">Основной инструктор · 4145159</p></div><span id="targetPill" class="pill">ОСНОВНОЙ</span></div>
+        <article class="hero-card">
+          <div class="hero-top"><div><span class="eyebrow">СТАТУС МОНИТОРИНГА</span><h2 id="statusText">Загрузка…</h2></div><span class="pulse-dot" id="statusDot" aria-hidden="true"></span></div>
+          <p id="statusDetail" class="hero-detail">Получаем последнее состояние.</p>
+          <div class="hero-divider"></div>
+          <div class="hero-meta"><div><span>Последняя проверка</span><strong id="lastChecked">—</strong></div><div><span>Плановая следующая</span><strong id="nextCheck">—</strong></div></div>
+        </article>
+        <div class="stats-grid"><div class="stat-card"><span class="stat-icon">◷</span><span>Свободных окон</span><strong id="slotCount">—</strong><small id="slotCountNote">Последний результат</small></div><div class="stat-card"><span class="stat-icon">✳</span><span>Новое окно было</span><strong class="stat-date" id="lastNew">—</strong><small>Для выбранного инструктора</small></div></div>
+        <div class="action-row"><a id="checkNow" class="button button-primary" href="#" target="_blank" rel="noopener noreferrer">Проверить сейчас <span aria-hidden="true">↗</span></a><a id="bookingLink" class="button button-outline" href="https://dikidi.net/" target="_blank" rel="noopener noreferrer">Открыть DIKIDI <span aria-hidden="true">↗</span></a></div>
+        <p class="action-note">Ручной запуск откроет GitHub Actions: нажмите там <b>Run workflow</b>, затем обновите панель.</p>
+        <section class="surface"><div class="section-head"><div><span class="eyebrow">АКТУАЛЬНЫЕ ОКНА</span><h3>Доступное время</h3></div><span class="small-label">Екатеринбург · UTC+5</span></div><div id="slots" class="slots-list"><p class="empty-text">Загрузка…</p></div></section>
+        <section class="surface"><div class="section-head"><div><span class="eyebrow">КОРОТКО О СИСТЕМЕ</span><h3>Последняя проверка</h3></div><button id="refreshButton" class="text-button" type="button">Обновить ↻</button></div><div id="lastResult" class="result-box">Загрузка…</div><div class="inline-metrics"><div><span>Telegram</span><strong id="telegramState">—</strong></div><div><span>Ожидают отправки</span><strong id="pendingCount">—</strong></div></div></section>
+      </section>
+
+      <section id="history" class="page" aria-labelledby="historyTitle"><div class="page-head"><div><span class="eyebrow">АРХИВ</span><h1 id="historyTitle">История<span class="headline-dot">.</span></h1><p class="muted">Последние 100 проверок и изменения расписания</p></div></div><section class="surface"><div class="section-head"><div><span class="eyebrow">ЗАПУСКИ</span><h3>Проверки</h3></div></div><div id="checksList" class="timeline"></div></section><section class="surface"><div class="section-head"><div><span class="eyebrow">ДВИЖЕНИЕ ЗАПИСЕЙ</span><h3>Появились и исчезли</h3></div></div><div id="eventsList" class="timeline"></div></section></section>
+
+      <section id="settings" class="page" aria-labelledby="settingsTitle"><div class="page-head"><div><span class="eyebrow">УПРАВЛЕНИЕ</span><h1 id="settingsTitle">Настройки<span class="headline-dot">.</span></h1><p class="muted">Изменения сохраняются сразу в вашей базе.</p></div></div><form id="settingsForm"><section class="surface"><div class="section-head"><div><span class="eyebrow">ПРОВЕРКА</span><h3>Расписание</h3></div></div><label class="switch-row"><span><b>Мониторинг включён</b><small>Отключите, чтобы остановить плановые запросы</small></span><input id="enabled" type="checkbox" role="switch"></label><label class="field">Проверять не чаще чем раз в<select id="interval"><option value="5">5 минут</option><option value="10">10 минут</option><option value="15">15 минут</option><option value="30">30 минут</option><option value="60">60 минут</option></select></label><p class="help-text">GitHub запускает задачу примерно каждые 5 минут. Фактический запуск может задержаться или не состояться.</p></section><section class="surface"><div class="section-head"><div><span class="eyebrow">ИНСТРУКТОР</span><h3>Кого проверять</h3></div></div><label class="field">Выбранный инструктор<select id="master"><option value="4145159">Основной · 4145159</option><option value="4145151">Тестовый · 4145151</option></select></label><div class="banner banner-warn">Тестовый инструктор нужен только для проверки. Все его сообщения явно отмечены как тестовые. После теста вернитесь на 4145159.</div></section><section class="surface"><div class="section-head"><div><span class="eyebrow">TELEGRAM</span><h3>Уведомления</h3></div></div><label class="field">Когда отправлять сообщения<select id="notificationMode"><option value="new">Только новые окна</option><option value="all">После каждой проверки</option><option value="empty">Когда окон нет</option></select></label><label class="switch-row"><span><b>Сообщать об ошибках</b><small>403, 404, 429, 500, сеть, timeout, изменение ответа</small></span><input id="notifyErrors" type="checkbox" role="switch"></label><label class="switch-row"><span><b>Сообщать об исчезновении</b><small>Отдельное сообщение, если запись пропала</small></span><input id="notifyDisappeared" type="checkbox" role="switch"></label><p class="help-text">Токен бота и Chat ID хранятся только в GitHub Secrets.</p></section><button class="button button-primary full save-button" type="submit">Сохранить настройки ↗</button><p id="saveMessage" class="save-message" role="status"></p></form></section>
+
+      <section id="system" class="page" aria-labelledby="systemTitle"><div class="page-head"><div><span class="eyebrow">ДИАГНОСТИКА</span><h1 id="systemTitle">Система<span class="headline-dot">.</span></h1><p class="muted">Связь, логи и способ ручной проверки</p></div></div><section class="surface"><div class="section-head"><div><span class="eyebrow">СОСТОЯНИЕ</span><h3>Подключения</h3></div></div><div class="system-row"><span>Хранилище Supabase</span><strong id="dbState">Подключено</strong></div><div class="system-row"><span>Telegram</span><strong id="telegramState2">—</strong></div><div class="system-row"><span>Последняя ошибка DIKIDI</span><strong id="systemError">—</strong></div><div class="system-row"><span>Режим</span><strong id="systemTarget">—</strong></div></section><section class="surface"><div class="section-head"><div><span class="eyebrow">РУЧНОЙ ЗАПУСК</span><h3>Проверить сейчас</h3></div></div><p>Статический сайт не может безопасно запустить GitHub Action сам. Кнопка ниже откроет страницу Actions. Войдите в GitHub, нажмите <b>Run workflow</b> и выберите <b>check</b>. Для проверки бота без DIKIDI выберите <b>telegram_test</b>.</p><a id="actionsLink" class="button button-outline full" href="#" target="_blank" rel="noopener noreferrer">Перейти к Actions ↗</a></section><section class="surface"><div class="section-head"><div><span class="eyebrow">ПОМОЩЬ</span><h3>Если возникла ошибка</h3></div></div><p>Откройте последний запуск на вкладке Actions и посмотрите шаг <b>Check DIKIDI or Telegram</b>. Если DIKIDI вернул 403, запись остаётся в состоянии «ошибка»: система не заменяет её пустым списком.</p><p class="help-text">Полная настройка с iPhone и устранение ошибок описаны в README.md репозитория.</p></section></section>
+    </div>
+  </div>
+  <nav id="bottomNav" class="bottom-nav" aria-label="Разделы" hidden><button data-page="overview" class="active"><span>⌂</span>Обзор</button><button data-page="history"><span>◷</span>История</button><button data-page="settings"><span>☷</span>Настройки</button><button data-page="system"><span>⚙</span>Система</button></nav>
+</body>
+</html>
